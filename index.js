@@ -1,5 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
+
+import setupSwagger from './swagger.js';
+
 import Book from './models/book.model.js';
 import { getAllNotes, getNote, createNote, updateNote, deleteNote } from './database.js';
 
@@ -25,7 +28,21 @@ mongoose.connect(mongo_url).then (() => {
 
 // MongoDB Book Endpoints
 
+/**
+ * @swagger
+ * /api/books/
+ *  post:
+ *   summary: Create a new book
+ *   description: Create a new book
+ *   responses:
+ *    201:
+ *     description: Book created successfully
+
+ * 
+ * 
+ */
 app.post('/api/books/', async (req, res) => {
+
     try {
         const book = await Book.create(req.body);
         res.status(201).json(book);
@@ -148,4 +165,5 @@ app.delete('/api/note/:id', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
+    setupSwagger(app, port);
 })
